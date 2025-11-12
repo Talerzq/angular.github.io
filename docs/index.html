@@ -1,13 +1,128 @@
-<!DOCTYPE html><html lang="en" data-beasties-container><head>
-  <meta charset="utf-8">
-  <title>Zadania</title>
-  <base href="/angular/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="stylesheet" href="styles-5INURTSO.css"><style ng-app-id="ng">.container[_ngcontent-ng-c2613702690]{max-width:800px;margin:0 auto;padding:20px;font-family:Arial,sans-serif}.add-task-section[_ngcontent-ng-c2613702690]{margin-bottom:20px;padding:20px;border:1px solid #ddd;border-radius:8px;background-color:#f9f9f9}.input-field[_ngcontent-ng-c2613702690]{display:block;width:100%;padding:10px;margin-bottom:10px;border:1px solid #ccc;border-radius:4px;font-size:16px}.filters-section[_ngcontent-ng-c2613702690]{display:flex;gap:10px;margin-bottom:20px}.filters[_ngcontent-ng-c2613702690]{margin-left:5px}.button[_ngcontent-ng-c2613702690]{background-color:#1976d2;color:#fff;border:none;padding:10px 20px;font-size:16px;border-radius:6px;cursor:pointer;transition:background-color .3s ease,transform .1s ease;box-shadow:0 2px 4px #0003}.button[_ngcontent-ng-c2613702690]:hover{background-color:#1565c0}.button[_ngcontent-ng-c2613702690]:active{transform:scale(.98)}.tasks-section[_ngcontent-ng-c2613702690]   ul[_ngcontent-ng-c2613702690]{list-style:none;padding:0}.task-item[_ngcontent-ng-c2613702690]{display:flex;justify-content:space-between;align-items:center;padding:15px;margin-bottom:10px;border:1px solid #ddd;border-radius:8px;background-color:#fff}.task-content[_ngcontent-ng-c2613702690]{flex:1}.task-actions[_ngcontent-ng-c2613702690]{display:flex;gap:10px}</style></head>
-<body><!--nghm--><script type="text/javascript" id="ng-event-dispatch-contract">(()=>{function p(t,n,r,o,e,i,f,m){return{eventType:t,event:n,targetElement:r,eic:o,timeStamp:e,eia:i,eirp:f,eiack:m}}function u(t){let n=[],r=e=>{n.push(e)};return{c:t,q:n,et:[],etc:[],d:r,h:e=>{r(p(e.type,e,e.target,t,Date.now()))}}}function s(t,n,r){for(let o=0;o<n.length;o++){let e=n[o];(r?t.etc:t.et).push(e),t.c.addEventListener(e,t.h,r)}}function c(t,n,r,o,e=window){let i=u(t);e._ejsas||(e._ejsas={}),e._ejsas[n]=i,s(i,r),s(i,o,!0)}window.__jsaction_bootstrap=c;})();
-</script><script>window.__jsaction_bootstrap(document.body,"ng",["input","click"],[]);</script>
-  <app-root ng-version="20.3.9" _nghost-ng-c2613702690 ngh="0" ng-server-context="ssg"><div _ngcontent-ng-c2613702690 class="container"><div _ngcontent-ng-c2613702690 class="add-task-section"><h1 _ngcontent-ng-c2613702690>Add task</h1><input _ngcontent-ng-c2613702690 placeholder="Add new Task" class="input-field" value jsaction="input:;"><button _ngcontent-ng-c2613702690 class="button" jsaction="click:;">Add Task</button></div><div _ngcontent-ng-c2613702690 class="filters-section"><div _ngcontent-ng-c2613702690 class="filters"><button _ngcontent-ng-c2613702690 class="button" jsaction="click:;">All</button></div><div _ngcontent-ng-c2613702690 class="filters"><button _ngcontent-ng-c2613702690 class="button" jsaction="click:;">Active</button></div><div _ngcontent-ng-c2613702690 class="filters"><button _ngcontent-ng-c2613702690 class="button" jsaction="click:;">Done</button></div></div><div _ngcontent-ng-c2613702690 class="tasks-section"><ul _ngcontent-ng-c2613702690><!----></ul></div></div></app-root>
-<script src="main-MXM2GIBK.js" type="module"></script>
+<div class="container">
+  <div class="add-task-section">
+    <h1>Add task</h1>
+    <input [value]="newTaskText()" (input)="handleInput($event)" placeholder="Add new Task" class="input-field">
+    <button (click)="addTask()" class="button">Add Task</button>
+  </div>
 
-<script id="ng-state" type="application/json">{"__nghData__":[{"t":{"19":"t0"},"c":{"19":[]}}]}</script></body></html>
+  <div class="filters-section">
+    <div class="filters">
+      <button (click)="setFilter('all')" class="button">All</button>
+    </div>
+    <div class="filters">
+      <button (click)="setFilter('active')" class="button">Active</button>
+    </div>
+    <div class="filters">
+      <button (click)="setFilter('done')" class="button">Done</button>
+    </div>
+  </div>
+
+  <div class="tasks-section">
+    <ul>
+      <li *ngFor="let task of filteredTasks()" class="task-item">
+        <div class="task-content">
+          <ng-container *ngIf="editingId() !== task.id">
+            <strong>{{task.text}}</strong> ({{task.done ? 'Done' : 'Active'}})
+          </ng-container>
+          <ng-container *ngIf="editingId() === task.id">
+            <input [value]="editedText()" (input)="editedText.set($any($event.target).value)" placeholder="Edit task" class="input-field edit-input">
+          </ng-container>
+        </div>
+        <div class="task-actions">
+          <ng-container *ngIf="editingId() !== task.id">
+            <button (click)="toggleDone(task.id)" class="button">Mark as {{task.done ? 'Active' : 'Done'}}</button>
+            <button (click)="edit(task.id)" class="button">Edit</button>
+            <button (click)="delete(task.id)" class="button">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="editingId() === task.id">
+            <button (click)="saveEdit(task.id)" class="button">Save</button>
+            <button (click)="cancelEdit()" class="button">Cancel</button>
+          </ng-container>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<style>
+    .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.add-task-section {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.filters-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters {
+  margin-left: 5px;
+}
+
+.button {
+  background-color: #1976d2; /* ładny niebieski */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+  background-color: #1565c0;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.tasks-section {
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+}
+</style>
