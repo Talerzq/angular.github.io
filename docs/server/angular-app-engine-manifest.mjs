@@ -1,6 +1,6 @@
 
 export default {
-  basePath: '/angular',
+  basePath: '/Zadania',
   supportedLocales: {
   "en-US": ""
 },
