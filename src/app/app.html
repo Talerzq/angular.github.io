@@ -1,0 +1,128 @@
+<div class="container">
+  <div class="add-task-section">
+    <h1>Add task</h1>
+    <input [value]="newTaskText()" (input)="handleInput($event)" placeholder="Add new Task" class="input-field">
+    <button (click)="addTask()" class="button">Add Task</button>
+  </div>
+
+  <div class="filters-section">
+    <div class="filters">
+      <button (click)="setFilter('all')" class="button">All</button>
+    </div>
+    <div class="filters">
+      <button (click)="setFilter('active')" class="button">Active</button>
+    </div>
+    <div class="filters">
+      <button (click)="setFilter('done')" class="button">Done</button>
+    </div>
+  </div>
+
+  <div class="tasks-section">
+    <ul>
+      <li *ngFor="let task of filteredTasks()" class="task-item">
+        <div class="task-content">
+          <ng-container *ngIf="editingId() !== task.id">
+            <strong>{{task.text}}</strong> ({{task.done ? 'Done' : 'Active'}})
+          </ng-container>
+          <ng-container *ngIf="editingId() === task.id">
+            <input [value]="editedText()" (input)="editedText.set($any($event.target).value)" placeholder="Edit task" class="input-field edit-input">
+          </ng-container>
+        </div>
+        <div class="task-actions">
+          <ng-container *ngIf="editingId() !== task.id">
+            <button (click)="toggleDone(task.id)" class="button">Mark as {{task.done ? 'Active' : 'Done'}}</button>
+            <button (click)="edit(task.id)" class="button">Edit</button>
+            <button (click)="delete(task.id)" class="button">Delete</button>
+          </ng-container>
+          <ng-container *ngIf="editingId() === task.id">
+            <button (click)="saveEdit(task.id)" class="button">Save</button>
+            <button (click)="cancelEdit()" class="button">Cancel</button>
+          </ng-container>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<style>
+    .container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.add-task-section {
+  margin-bottom: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.input-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.filters-section {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filters {
+  margin-left: 5px;
+}
+
+.button {
+  background-color: #1976d2; /* ładny niebieski */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.button:hover {
+  background-color: #1565c0;
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.tasks-section {
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.task-content {
+  flex: 1;
+}
+
+.task-actions {
+  display: flex;
+  gap: 10px;
+}
+</style>
