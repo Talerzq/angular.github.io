@@ -8,3 +8,4 @@
 - Spinner ładowania przy starcie
 - Podstawowy interfejs Angular Material
 - Testy jednostkowe komponentu 
+- Link do strony :https://talerzq.github.io/angular.github.io/
