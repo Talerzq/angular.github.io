@@ -1,10 +1,18 @@
 <div class="container">
+
+  <!-- Sekcja dodawania zadania -->
   <div class="add-task-section">
     <h1>Add task</h1>
     <input [value]="newTaskText()" (input)="handleInput($event)" placeholder="Add new Task" class="input-field">
     <button (click)="addTask()" class="button">Add Task</button>
   </div>
 
+  <!-- Spinner ładowania -->
+  <div *ngIf="loading()" class="spinner-container">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+
+  <!-- Filtry -->
   <div class="filters-section">
     <div class="filters">
       <button (click)="setFilter('all')" class="button">All</button>
@@ -17,7 +25,8 @@
     </div>
   </div>
 
-  <div class="tasks-section">
+  <!-- Lista zadań -->
+  <div class="tasks-section" *ngIf="!loading()">
     <ul>
       <li *ngFor="let task of filteredTasks()" class="task-item">
         <div class="task-content">
@@ -42,7 +51,9 @@
       </li>
     </ul>
   </div>
+
 </div>
+
 <style>
     .container {
   max-width: 800px;

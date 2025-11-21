@@ -1,12 +1,17 @@
 import { Component, signal, computed, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Task } from './interfaces/task';
+
+// Angular Material spinner
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatProgressSpinnerModule
+  ],
   templateUrl: './app.html',
   styleUrls: ['./app.scss']
 })
@@ -17,6 +22,7 @@ export class App implements OnInit
   filter = signal<'all' | 'active' | 'done'>('all');
   editingId = signal<number | null>(null);  // id zadania w trybie edycji
   editedText = signal<string>('');  // tekst podczas edycji
+  loading = signal<boolean>(true); // spinner ładowania
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -37,6 +43,9 @@ export class App implements OnInit
         this.tasks.set(JSON.parse(storedTasks));
       }
     }
+
+    // Symulacja krótkiego ładowania spinnera
+    setTimeout(() => this.loading.set(false), 300);
   }
 
   handleInput(event: Event) {
