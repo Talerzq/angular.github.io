@@ -7,4 +7,4 @@
 - Zapis i odczyt z LocalStorage
 - Spinner ładowania przy starcie
 - Podstawowy interfejs Angular Material
-- Testy jednostkowe komponentu i serwisu
+- Testy jednostkowe komponentu 
